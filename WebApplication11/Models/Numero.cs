@@ -26,6 +26,8 @@ namespace WebApplication11.Models
         {
             string numeroinvertido = new string(numero.Reverse().ToArray());
             string sinalmenos = string.Empty;
+            string aux = string.Empty;
+            char[] chararray;
 
             string unidade = string.Empty;
             string dezena = string.Empty;
@@ -33,12 +35,34 @@ namespace WebApplication11.Models
             string milhar = string.Empty;
             string dezenademilhar = string.Empty;
 
+            aux = new string(numeroinvertido.Substring(0));
 
-            if (numeroinvertido.Contains('-'))
+            // --------- Verifica se o número é negativo ---------\\
+            if (aux.Contains('-'))
             {
                 sinalmenos = "menos ";
                 numeroinvertido = numeroinvertido.Substring(0, numeroinvertido.Length - 1);
             }
+
+            // --------- Verifica o limite de caracteres ---------\\
+            if (numeroinvertido.Length > 5)
+            {
+                numeroinvertido = string.Empty;
+                sinalmenos = string.Empty;
+            }
+
+            chararray = numeroinvertido.ToCharArray(0, numeroinvertido.Length);
+
+            foreach (char c in chararray)
+            {
+                if (!char.IsNumber(c))
+                {
+                    numeroinvertido = string.Empty;
+                    extenso = "O valor digitado é inválido";
+                    break;
+                }
+            }
+
 
             if (numeroinvertido.Length == 5 && numeroinvertido[4] == '1')
             {
@@ -98,7 +122,7 @@ namespace WebApplication11.Models
                     default: break;
                 }
 
-                if (numeroinvertido.Length == 5)
+                if (numeroinvertido.Length == 5 && numeroinvertido[4] != '1')
                 {
                     milhar = " e " + milhar + " mil";
                 }
@@ -174,7 +198,7 @@ namespace WebApplication11.Models
                 }
             }
 
-            else if (numeroinvertido.Length >= 2 && numeroinvertido[1] != '0')
+            if (numeroinvertido.Length >= 2 && numeroinvertido[1] != '0')
             {
                 switch (numeroinvertido[1])
                 {
