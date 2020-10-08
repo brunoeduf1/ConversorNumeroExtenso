@@ -23,7 +23,7 @@ namespace WebApplication8.Controller
         public Numero Get(string id)
         {
             Numero n = new Numero(id);
-            n.EscreveNumero();
+            n.ConverteNumero(id);
 
             return n;
         }

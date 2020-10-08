@@ -12,22 +12,16 @@ namespace WebApplication11.Models
     public class Numero
     {
         public string extenso { get; set; }
-        string numero = string.Empty;
 
-        public Numero(string id)
+        public Numero(string id) { }
+
+        public void ConverteNumero(string id)
         {
-            numero = id;
-        }
-        public void EscreveNumero()
-        {
-            ConverteNumero();
-        }
-        public void ConverteNumero()
-        {
-            string numeroinvertido = new string(numero.Reverse().ToArray());
+            string numeroinvertido = new string(id.Reverse().ToArray());
             string sinalmenos = string.Empty;
             string aux = string.Empty;
             char[] chararray;
+            string mensagemerro = string.Empty;
 
             string unidade = string.Empty;
             string dezena = string.Empty;
@@ -49,8 +43,10 @@ namespace WebApplication11.Models
             {
                 numeroinvertido = string.Empty;
                 sinalmenos = string.Empty;
+                mensagemerro = "O valor informado está fora do intervalo [-99999, 99999]";
             }
 
+            // --------- Verifica se o valor digitado é um número inteiro ---------\\
             chararray = numeroinvertido.ToCharArray(0, numeroinvertido.Length);
 
             foreach (char c in chararray)
@@ -58,47 +54,24 @@ namespace WebApplication11.Models
                 if (!char.IsNumber(c))
                 {
                     numeroinvertido = string.Empty;
-                    extenso = "O valor digitado é inválido";
+                    sinalmenos = string.Empty;
+                    mensagemerro = "O valor digitado é inválido";
                     break;
                 }
             }
 
-
+            // --------- Converte dezena de milhar de 10 a 19 ---------\\
             if (numeroinvertido.Length == 5 && numeroinvertido[4] == '1')
             {
-                switch (numero.Substring(0, 2))
-                {
-                    case "10": dezenademilhar = "dez"; break;
-                    case "11": dezenademilhar = "onze"; break;
-                    case "12": dezenademilhar = "doze"; break;
-                    case "13": dezenademilhar = "treze"; break;
-                    case "14": dezenademilhar = "quatorze"; break;
-                    case "15": dezenademilhar = "quinze"; break;
-                    case "16": dezenademilhar = "dezesseis"; break;
-                    case "17": dezenademilhar = "dezessete"; break;
-                    case "18": dezenademilhar = "dezoito"; break;
-                    case "19": dezenademilhar = "dezenove"; break;
-                    default: break;
-                }
+                dezenademilhar = Dezena2Get(numeroinvertido, 3, 2);
 
                 dezenademilhar = dezenademilhar + " mil";
             }
 
+            // --------- Converte dezena de milhar---------\\
             else if (numeroinvertido.Length == 5 && numeroinvertido[4] != '0')
             {
-                switch (numeroinvertido[4])
-                {
-                    case '1': dezenademilhar = "dez"; break;
-                    case '2': dezenademilhar = "vinte"; break;
-                    case '3': dezenademilhar = "trinta"; break;
-                    case '4': dezenademilhar = "quarenta"; break;
-                    case '5': dezenademilhar = "cinquenta"; break;
-                    case '6': dezenademilhar = "sessenta"; break;
-                    case '7': dezenademilhar = "setenta"; break;
-                    case '8': dezenademilhar = "oitenta"; break;
-                    case '9': dezenademilhar = "noventa"; break;
-                    default: break;
-                }
+                dezenademilhar = DezenaGet(numeroinvertido, 4);
 
                 if (numeroinvertido[3] == '0')
                 {
@@ -106,21 +79,10 @@ namespace WebApplication11.Models
                 }
             }
 
+            // --------- Converte milhar ---------\\
             if (numeroinvertido.Length >= 4 && numeroinvertido[3] != '0')
             {
-                switch (numeroinvertido[3])
-                {
-                    case '1': milhar = "um"; break;
-                    case '2': milhar = "dois"; break;
-                    case '3': milhar = "três"; break;
-                    case '4': milhar = "quatro"; break;
-                    case '5': milhar = "cinco"; break;
-                    case '6': milhar = "seis"; break;
-                    case '7': milhar = "sete"; break;
-                    case '8': milhar = "oito"; break;
-                    case '9': milhar = "nove"; break;
-                    default: break;
-                }
+                milhar = UnidadeOuMilharGet(numeroinvertido, 3);
 
                 if (numeroinvertido.Length == 5 && numeroinvertido[4] != '1')
                 {
@@ -138,28 +100,12 @@ namespace WebApplication11.Models
                 }
             }
 
+            // --------- Converte centena ---------\\
             if (numeroinvertido.Length >= 3 && numeroinvertido[2] != '0')
             {
-                switch (numeroinvertido[2])
-                {
-                    case '1': centena = "cento"; break;
-                    case '2': centena = "duzentos"; break;
-                    case '3': centena = "trezentos"; break;
-                    case '4': centena = "quatrocentos"; break;
-                    case '5': centena = "quinhentos"; break;
-                    case '6': centena = "seissentos"; break;
-                    case '7': centena = "setecentos"; break;
-                    case '8': centena = "oitocentos"; break;
-                    case '9': centena = "novecentos"; break;
-                    default: break;
-                }
-
-                if (numeroinvertido.Length > 3)
-                {
-                    centena = " " + centena;
-                }
-
-                else if (numeroinvertido[2] == '1' && numeroinvertido[1] == '0' && numeroinvertido[0] == '0')
+                centena = CentenaGet(numeroinvertido, 2);
+            
+                if (numeroinvertido[2] == '1' && numeroinvertido[1] == '0' && numeroinvertido[0] == '0')
                 {
                     centena = "cem";
 
@@ -169,28 +115,21 @@ namespace WebApplication11.Models
                     }
                 }
 
+                else if (numeroinvertido.Length > 3)
+                {
+                    centena = " e " + centena;
+                }
+
                 else if (numeroinvertido.Length > 3 && numeroinvertido[2] != '1')
                 {
                     centena = " e" + centena;
                 }
             }
 
+            // --------- Converte dezena de 10 a 19 ---------\\
             if (numeroinvertido.Length >= 2 && numeroinvertido[1] == '1')
             {
-                switch (numeroinvertido.Substring(0, 2))
-                {
-                    case "01": dezena = "dez"; break;
-                    case "11": dezena = "onze"; break;
-                    case "21": dezena = "doze"; break;
-                    case "31": dezena = "treze"; break;
-                    case "41": dezena = "quatorze"; break;
-                    case "51": dezena = "quinze"; break;
-                    case "61": dezena = "dezesseis"; break;
-                    case "71": dezena = "dezessete"; break;
-                    case "81": dezena = "dezoito"; break;
-                    case "91": dezena = "dezenove"; break;
-                    default: break;
-                }
+                dezena = Dezena2Get(numeroinvertido, 0, 2);
 
                 if (numeroinvertido.Length > 2)
                 {
@@ -198,20 +137,11 @@ namespace WebApplication11.Models
                 }
             }
 
-            if (numeroinvertido.Length >= 2 && numeroinvertido[1] != '0')
+            // --------- Converte dezena ---------\\
+            else if (numeroinvertido.Length >= 2 && numeroinvertido[1] != '0')
             {
-                switch (numeroinvertido[1])
-                {
-                    case '2': dezena = "vinte"; break;
-                    case '3': dezena = "trinta"; break;
-                    case '4': dezena = "quarenta"; break;
-                    case '5': dezena = "cinquenta"; break;
-                    case '6': dezena = "sessenta"; break;
-                    case '7': dezena = "setenta"; break;
-                    case '8': dezena = "oitenta"; break;
-                    case '9': dezena = "noventa"; break;
-                    default: break;
-                }
+
+                dezena = DezenaGet(numeroinvertido, 1);
 
                 if (numeroinvertido.Length > 2)
                 {
@@ -219,35 +149,106 @@ namespace WebApplication11.Models
                 }
             }
 
-            if (numeroinvertido.Length >= 1)
+            // --------- Converte unidade ---------\\
+            if (numeroinvertido.Length >= 1 && numeroinvertido[0] != '0')
             {
-                switch (numeroinvertido[0])
-                {
-                    case '1': unidade = "um"; break;
-                    case '2': unidade = "dois"; break;
-                    case '3': unidade = "três"; break;
-                    case '4': unidade = "quatro"; break;
-                    case '5': unidade = "cinco"; break;
-                    case '6': unidade = "seis"; break;
-                    case '7': unidade = "sete"; break;
-                    case '8': unidade = "oito"; break;
-                    case '9': unidade = "nove"; break;
-                    default: break;
-                }
+                unidade = UnidadeOuMilharGet(numeroinvertido, 0);
 
                 if (numeroinvertido.Length >= 2 && numeroinvertido[1] == '1')
                 {
                     unidade = string.Empty;
                 }
 
-                else if (numeroinvertido.Length > 1 && unidade != string.Empty)
+                if (numeroinvertido.Length > 1 && unidade != string.Empty)
                 {
                     unidade = " e " + unidade;
                 }
             }
 
-            extenso = sinalmenos + dezenademilhar + milhar + centena + dezena + unidade;
+            if (numeroinvertido.Length == 1 && numeroinvertido[0] == '0')
+            {
+                unidade = "zero";
+            }
+
+            extenso = mensagemerro + sinalmenos + dezenademilhar + milhar + centena + dezena + unidade;
         }
 
+        // --------- Realiza a conversão para extenso ---------\\
+        public string UnidadeOuMilharGet(string num, int pos)
+        {
+            string e = string.Empty;
+
+            switch (num[pos])
+            {
+                case '1': e = "um"; break;
+                case '2': e = "dois"; break;
+                case '3': e = "três"; break;
+                case '4': e = "quatro"; break;
+                case '5': e = "cinco"; break;
+                case '6': e = "seis"; break;
+                case '7': e = "sete"; break;
+                case '8': e = "oito"; break;
+                case '9': e = "nove"; break;
+                default: break;
+            }
+            return e;
+        }
+        public string DezenaGet(string num, int pos)
+        {
+            string e = string.Empty;
+
+            switch (num[pos])
+            {
+                case '2': e = "vinte"; break;
+                case '3': e = "trinta"; break;
+                case '4': e = "quarenta"; break;
+                case '5': e = "cinquenta"; break;
+                case '6': e = "sessenta"; break;
+                case '7': e = "setenta"; break;
+                case '8': e = "oitenta"; break;
+                case '9': e = "noventa"; break;
+                default: break;
+            }
+            return e;
+        }
+        public string Dezena2Get(string num, int sub1, int sub2)
+        {
+            string e = string.Empty;
+
+            switch (num.Substring(sub1, sub2))
+            {
+                case "01": e = "dez"; break;
+                case "11": e = "onze"; break;
+                case "21": e = "doze"; break;
+                case "31": e = "treze"; break;
+                case "41": e = "quatorze"; break;
+                case "51": e = "quinze"; break;
+                case "61": e = "dezesseis"; break;
+                case "71": e = "dezessete"; break;
+                case "81": e = "dezoito"; break;
+                case "91": e = "dezenove"; break;
+                default: break;
+            }
+            return e;
+        }
+        public string CentenaGet(string num, int pos)
+        {
+            string e = string.Empty;
+
+            switch (num[pos])
+            {
+                case '1': e = "cento"; break;
+                case '2': e = "duzentos"; break;
+                case '3': e = "trezentos"; break;
+                case '4': e = "quatrocentos"; break;
+                case '5': e = "quinhentos"; break;
+                case '6': e = "seissentos"; break;
+                case '7': e = "setecentos"; break;
+                case '8': e = "oitocentos"; break;
+                case '9': e = "novecentos"; break;
+                default: break;
+            }
+            return e;
+        }
     }
 }
