@@ -1,4 +1,4 @@
-Introdução: Foi criado um servidor HTTP que, para cada requisição GET, retorna um JSON cuja chave extenso seja a versão por extenso do número inteiro enviado no path.
+Introdução: Foi criado um servidor HTTP onde, a cada requisição GET, retorna um JSON cuja chave extenso é a versão por extenso do número inteiro enviado no path.
 
 1 - O projeto foi feito utilizando o Visual Studio 2019, Web API na linguagem C#
 2 - Para rodar o projeto, execute o arquivo "WebApplication11.exe"
